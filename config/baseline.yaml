@@ -1,0 +1,32 @@
+# Participant file used only in baseline.cpp
+participant_file: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/Paper_Results/baseline"
+
+# Limits of EE velocity
+max_vel: 0.2
+min_vel: -0.2
+
+# Limits of EE position
+# max_x: -0.169
+# min_x: -0.349
+# max_y: 0.330
+# min_y: 0.149
+
+# Limits of EE position - 2025
+max_x: -0.162
+min_x: -0.350
+max_y: 0.348
+min_y: 0.159
+
+# Starting positions - 2025
+start_position_0: [-0.256, 0.179, 0.173]
+start_position_1: [-0.256, 0.338, 0.173]
+
+# Goal position
+goal_position: 0.256 #0.246
+
+# Number of games
+num_of_games: 8
+
+# Goal tolerance (maximum distance from the goal and maximum speed so that the game is won)
+position_tolerance: 0.01
+velocity_tolerance: 0.05

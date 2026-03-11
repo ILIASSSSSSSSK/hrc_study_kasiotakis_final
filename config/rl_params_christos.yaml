@@ -1,0 +1,71 @@
+Game:
+  participant_name: "DXR"
+  full_path: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/"
+  load_model_training_dir : "Paper_Results/rl_models/100K_every8_uniform_200ms_Christos_03_LfD_TL_13"
+  load_ppr_model_dir: "Paper_Results/rl_models/100K_every8_uniform_200ms_Christos_03_LfD_TL_13" # Location of the model for transfer learning 
+  load_model_testing_dir: "Paper_Results/initialized_agents/100K_every8_uniform_200ms_Init_10" # Location of the model for testing
+  initialized_agent_dir: "Paper_Results/baseline"
+  train_model: True # True if no training happens
+  load_model_training: False # True if loading model to continue training
+  load_model_transfer_learning: False # True if loading model for transfer_learning 
+  initialized_agent: True
+  actor_name: "/actor_sac"
+  critic_name: "/critic_sac"
+  
+  save: True # Save models and logs
+  goal: [-0.256, 0.256] #[-0.264, 0.242] # goal position #NEW CALLIBRATION #My comment: even if Gazebo y axis is the opossite of the real, the ee_state looks normal
+  goal_distance: 0.01 #0.01 maximum distance from goal in order to win
+  goal_velocity: 0.05 #0.05 maximum speed in order to win
+  win_audio: "street-fighter-ii-you-win-perfect.mp3" # audio for win
+  lose_audio: "gaming-sound-effect-hd.mp3" # audio for lose
+  start_audio: ["beep-07a.mp3", "beep-09.mp3"] # audio for starting the game
+  rest_period: 15 # rest period between training-testing batches
+  ppr_threshold: 0.7 # initial ppr probability
+  number_of_states: 4 #number of how many elements are on the state (2: posx and pos y, 4: velx and vely included)
+  random_position: False #if its true then go to a random initial position after each game. If its False go cyclic to each position
+  gazebo_simulation: False #if true then you are playing in the simulation, if not you are playing with the real robot
+  init_cyclic_pos: 0 #The first position the end effector is going to go if we are moving cyclical
+  save_init_ag: False #this parameter has to be always false. It is set to True by the program when the baseline block is complete.
+SAC:
+  # SAC parameters
+  layer1_size: 32 # Number of variables in hidden layer
+  layer2_size: 32 # Number of variables in hidden layer
+  batch_size: 256
+  gamma: 0.99  # discount factor
+  tau: 0.005
+  alpha: 0.0003
+  beta: 0.0003
+  target_entropy_ratio: 0.4
+  buffer_max_size: 1000000
+
+
+# The game in splitted in training batches. Each batch consists of `test:max_episodes` testing episodes and `learn_every_n_episodes` training episodes.  
+# After each batch is completed, the model is trained. This procedure is repeated until `max_episodes` training episodes have been completed. 
+Experiment:
+  max_episodes: 48 #64  # train_batches X games_per_batch : Total training episodes per game #70 PPR 50 LfD### 
+  max_duration: 30 #30 Max duration of an episode (in seconds). An episode ends if the ball hits the target or if we reach the time limit
+  num_blocks: 12 #16   # Sum of train + test blocks
+  test_interval: 8 # Test the current model after `test_interval` episodes
+  action_duration: 0.2 # Time duration between consecutive RL agent actions
+  scheduling: "uniform" # "uniform" or "descending"
+  start_training_on_episode: 8 # Will not train the agent before this trial
+  stop_random_agent: 8 #10 Stop using random agent on this trial and start using SAC####
+  learn_every_n_episodes: 8 # Perform offline gradient updates after every `learn_every_n_episodes` episodes
+  total_update_cycles: 75000  #7000 Total number of offline gradient updates throughout the whole experiment
+  reward_scale: 2 # Scale for the reward
+  number_of_agent_actions: 3 # number of discrete actionsφ
+  win_reward: 10 # reward at win
+  lose_reward: -1 # reward at every non-win state
+  update_per_game: False #"True" if you want to have update of NN parameters after each game in training or "False" if you want to update after the whole training block is finished
+  normalized: True #if you want your data to be normalized set it to true, else false
+  ee_vel_x_max: 0.2 #0.012
+  ee_vel_y_max: 0.2 #0.07
+  ee_vel_x_min: -0.2 #-0.011
+  ee_vel_y_min: -0.2 #-0.014
+  greedy: True #if this parameter is true the in testing you dont take a sample from the distribution but the action with the highest probability
+  rand_int: Fasle #if false during baseline test and in 1st training block it uses the NNs to take an action, else it selects an action based on random  
+
+  test:
+    max_episodes: 8 # Total testing episodes in a training batch
+    max_duration: 30 #30 Max duration of an episode test (in seconds). An episode ends if the ball hits the target or if we reach the time limit
+

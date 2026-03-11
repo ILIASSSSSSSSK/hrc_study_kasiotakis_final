@@ -1,0 +1,83 @@
+Game:
+  participant_name: "Ilias_news_100_test_experiments_65"
+  full_path: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/"
+  #LfD arguments
+  #lfd_transfer: False #true if we using learning from Demonstrations transfer learning
+  lfd_expert_gameplay: True  #true if the expert is playing and collecting demonstration and expert data and place them to the buffers
+  lfd_participant_gameplay: False #true if the participant is playing with transfer LfD
+
+  #games_to_capture: #The games that the Demonstrations buffer wil keep from the gameplay with the expert
+  train_model: False #True # True if no training happens
+  load_model_training: False # True if loading model to continue training
+  load_model_training_dir: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/rl_models/70K_every10_uniform_200ms_expert05entropy_LfD_TL_2" # Location of the model 
+  load_model_transfer_learning: False # True if loading model for transfer_learning 
+  load_model_transfer_learning_dir: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/rl_models/70K_every10_uniform_200ms_expert05entropy_LfD_TL_2" # Location of the model for transfer learning 
+  load_model_testing_dir: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/rl_models/75K_every8_uniform_200ms_Ilias_news7_1_no_TL_1" #"/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/rl_models/98K_every10_uniform_200ms_NIKOLAS_no_TL_13" # Location of the model for testing
+  load_model_testing_dir_actor: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/rl_models/75K_every8_uniform_200ms_Ilias_news7_1_no_TL_1/actor_sac_12"
+  load_model_testing_dir_critic: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/rl_models/75K_every8_uniform_200ms_Ilias_news7_1_no_TL_1/critic_sac_12"
+  load_demonstrations_data_dir: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/buffers/demo_buffer/demo_data_relu_keepingfromthe1stbatchtoo.npy" #Location of the expert experience for the participants buffer will be stored
+  initialized_agent: False
+  initialized_agent_dir: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/rl_models/initialized_agents/0K_every10_uniform_200ms_INITIALIZATIONN_no_TL_2" #no transfer initialixation
+  lfd_initialized_agent_dir: "/home/kassiotakis/Desktop/catkin_ws5/src/hrc_study_tsitosetal/buffers/initialized_agents/LFD_initiazed_agent_withfirstbatchdemos"
+  
+  actor_name: "/actor_sac"
+  critic_name: "/critic_sac"
+  
+  
+  save: True # Save models and logs
+  goal: [-0.252, 0.245] #[-0.264, 0.242] # goal position #NEW CALLIBRATION #My comment: even if Gazebo y axis is the opossite of the real, the ee_state looks normal
+  goal_distance: 0.01 #0.01 maximum distance from goal in order to win
+  goal_velocity: 0.05 #0.05 maximum speed in order to win
+  win_audio: "street-fighter-ii-you-win-perfect.mp3" # audio for win
+  lose_audio: "gaming-sound-effect-hd.mp3" # audio for lose
+  start_audio: ["beep-07a.mp3", "beep-09.mp3"] # audio for starting the game
+  rest_period: 15 # rest period between training-testing batches
+  ppr_threshold: 0.7 # initial ppr probability
+  number_of_states: 4 #number of how many elements are on the state (2: posx and pos y, 4: velx and vely included, 6: acc_x and acc_y included)
+  random_position: False #if its true then go to a random initial position after each game. If its False go cyclic to each position
+  gazebo_simulation: True #if true then you are playing in the simulation, if not you are playing with the real robot
+  init_cyclic_pos: 0 #The first position the end effector is going to go if we are moving cyclical
+  save_init_ag: False #this parameter has to be always false. It is set to True by the program when the baseline block is complete.
+SAC:
+  # SAC parameters
+  layer1_size: 32 # Number of variables in hidden layer
+  layer2_size: 32 # Number of variables in hidden layer
+  batch_size: 256
+  gamma: 0.99  # discount factor
+  tau: 0.005
+  alpha: 0.0003
+  beta: 0.0003
+  target_entropy_ratio: 0.4 #changed using the correct in networks and sac
+  buffer_max_size: 1000000
+
+
+# The game in splitted in training batches. Each batch consists of `test:max_episodes` testing episodes and `learn_every_n_episodes` training episodes.  
+# After each batch is completed, the model is trained. This procedure is repeated until `max_episodes` training episodes have been completed. 
+Experiment:
+  max_episodes: 48  #50 Total training episodes per game #70 PPR 50 LfD### 
+  max_duration: 30 #30 Max duration of an episode (in seconds). An episode ends if the ball hits the target or if we reach the time limit
+  num_blocks: 1#12 #16   # Sum of train + test blocks
+  test_interval: 8 # Test the current model after `test_interval` episodes
+  action_duration: 0.2 # Time duration between consecutive RL agent actions
+  scheduling: "uniform" # "uniform" or "descending"
+  start_training_on_episode: 8 # Will not train the agent before this trial
+  stop_random_agent: 8 #10 Stop using random agent on this trial and start using SAC####
+  learn_every_n_episodes: 8 # Perform offline gradient updates after every `learn_every_n_episodes` episodes
+  total_update_cycles: 75000  #7000 Total number of offline gradient updates throughout the whole experiment
+  reward_scale: 2 # Scale for the reward
+  number_of_agent_actions: 3 # number of discrete actionsφ
+  win_reward: 10 # reward at win
+  lose_reward: -1 # reward at every non-win state
+  update_per_game: False #"True" if you want to have update of NN parameters after each game in training or "False" if you want to update after the whole training block is finished
+  normalized: True #if you want your data to be normalized set it to true, else false
+  ee_vel_x_max: 0.2 #0.012
+  ee_vel_y_max: 0.2 #0.07
+  ee_vel_x_min: -0.2 #-0.011
+  ee_vel_y_min: -0.2 #-0.014
+  greedy: True #if this parameter is true the in testing you dont take a sample from the distribution but the action with the highest probability
+  rand_int: Fasle #if false during baseline test and in 1st training block it uses the NNs to take an action, else it selects an action based on random  
+
+  test:
+    max_episodes: 8  # Total testing episodes in a training batch
+    max_duration: 30 #30 Max duration of an episode test (in seconds). An episode ends if the ball hits the target or if we reach the time limit
+
