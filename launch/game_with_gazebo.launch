@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+  <include file="$(find manos_gazebo)/launch/manos_gazebo.launch">
+    <arg name="paused" value="true"/>
+  </include>
+  
+
+  <include file="$(find human_robot_collaborative_learning)/launch/game.launch">
+    <arg name="gazebo" value="true"/>
+  </include>
+  <node pkg="human_robot_collaborative_learning" type="set_init_position.py" name="set_init_position_node"/>
+</launch>

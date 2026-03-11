@@ -1,0 +1,11 @@
+﻿<?xml version="1.0"?>
+<robot name="target_pos">
+  <link name="pos_target">
+    <visual>
+      <geometry>
+        <cylinder length="0.01" radius="0.01"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.265 0.251 0.86"/>
+    </visual>
+  </link>
+</robot>

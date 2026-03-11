@@ -1,0 +1,11 @@
+<?xml version="2.0"?>
+
+<launch>
+
+	<node name="robot_movement_generation" type="baseline" pkg="human_robot_collaborative_learning" output="screen">
+		<rosparam file="$(find human_robot_collaborative_learning)/config/baseline.yaml" command="load"/>
+	</node>
+	<node name="baseline" type="baseline.py" pkg="human_robot_collaborative_learning" output="screen">
+        <rosparam file="$(find human_robot_collaborative_learning)/config/baseline.yaml" command="load"/>
+    </node>
+</launch>
