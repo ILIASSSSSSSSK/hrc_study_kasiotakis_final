@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="simple_cylinder">
+    <static>true</static> <!-- true = no physics, false = interacts with physics -->
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.005</radius> <!-- 0.5 cm radius -->
+            <length>0.05</length> <!-- 1 cm tall -->
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0 1 0 1</ambient> <!-- Blue color -->
+          <diffuse>0 0 1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  <gui fullscreen='0'>
+        <camera name="user_camera">
+            <pose>1.52237 0.071259 2.064016 0 0.539642 3.088186</pose>
+            <view_controller>orbit</view_controller>
+        </camera>
+  </gui>
+</sdf>
