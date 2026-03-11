@@ -1,0 +1,1 @@
+timestamps,block,episode,init_pos,human_action,agent_action,prev_x,prev_y,next_x,next_y,ee_pos_x_prev,ee_pos_y_prev,ee_vel_x_prev,ee_vel_y_prev,ee_pos_x_next,ee_pos_y_next,ee_vel_x_next,ee_vel_y_next,cmd_acc_human,cmd_acc_agent
